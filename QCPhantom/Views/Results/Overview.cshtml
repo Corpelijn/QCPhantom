@@ -1,0 +1,185 @@
+﻿
+@{
+    ViewBag.Title = "Overview";
+
+    Random rand = new Random();
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Overview</h2>
+    </div>
+</div>
+
+<script>
+    // This script sets the events on the rows
+    function InitEvents() {
+        $('[id^=img_row_]').off();
+        $('[id^=img_row_]').click(function () {
+            ExpandCloseData($(this).attr('id'));
+        });
+
+        $('[id^=td_row_]').off();
+        $('[id^=td_row_]').click(function () {
+            ExpandCloseData($(this).attr('id'));
+        });
+    }
+
+    // This script collapses and expands the examinations
+    var img_is_done;
+    function ExpandCloseData(parent) {
+        // Get the row number from the id
+        var index = parent.lastIndexOf('_');
+        var row = parent.substring(index + 1);
+
+        if (parent.indexOf('td_row_') != -1) {
+            if (img_is_done == row) {
+                img_is_done = undefined;
+                return;
+            }
+        }
+
+        var rowDOM = $('#row_' + row);
+        if (rowDOM.hasClass('hidden')) {
+            rowDOM.removeClass('hidden');
+            $('#img_row_' + row).attr('src', './Images/minus.png');
+        } else {
+            rowDOM.addClass('hidden');
+            $('#img_row_' + row).attr('src', './Images/plus.png');
+        }
+
+        if (parent.indexOf('img_row_') != -1) {
+            img_is_done = row;
+        }
+    }
+
+    // This script adds new rows to the table of examinations
+    function AddExamination(index) {
+        $.post("./Results/NextExamination?index=" + index, function (data) {
+            var json = $.parseJSON(JSON.stringify(data));
+            $('#input').val(json.assessionnumber);
+
+            var newRow = '<tr><td style="padding-top: 7px; text-align: center" id="td_row_' + index + '"><img src="./Images/plus.png" id="img_row_' + index + '" /></td>';
+            newRow += '<td>' + json.datetime + '</td>' + '<td>' + json.assessionnumber + '</td>' + '<td>' + json.studyinstance + '</td>';
+            newRow += '<td>' + json.machine + '</td>' + '<td>' + json.patientid + '</td>' + '</tr>';
+
+            $('#table_examinations').append(newRow);
+            $('#table_examinations').append($('#original_row').clone().attr('id', 'row_' + index).addClass('hidden'));
+
+            InitEvents();
+
+            for (i = 0; i < json.analysecount; i++) {
+                AddAnalyse(index, json['instanceUID' + i], json['detector' + i], json['datetime' + i], json['status' + i], json['resultaten' + i]);
+            }
+        });
+    }
+
+    // This script adds new analyses to the table of analyses for each examination
+    function AddAnalyse(rowindex, instanceUID, detector, datetime, status, resultaten) {
+        var newRow = '<tr><td>' + instanceUID + '</td>';
+        newRow += '<td>' + detector + '</td><td>' + datetime + '</td>';
+        newRow += '<td class="success">' + status + '</td><td>' + resultaten + '</td>';
+        newRow += '<td style="width: 50px"><button class="btn btn-xs btn-success">Bekijken</button></td></tr>';
+
+        $('#row_' + rowindex + ' tbody').append(newRow);
+    }
+
+    $(document).ready(function () {
+        InitEvents();
+
+        var index = 0;
+        $('#testbtn').click(function () {
+            AddExamination(index);
+            index++;
+        });
+    });
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-danger" id="testbtn">test</button>
+        <input type="text" id="input" />
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Datum en tijd</th>
+                    <th>PACS assession</th>
+                    <th>Study instance UID</th>
+                    <th>Machine</th>
+                    <th>Patient ID</th>
+                </tr>
+            </thead>
+
+            <tbody id="table_examinations">
+                @*@for (int i = 0; i < rand.Next(1, 10); i++)
+                    {
+                            <tr>
+                                <td style="padding-top: 7px; text-align: center" id="td_row_@(i)"><img src="./Images/plus.png" id="img_row_@(i)" /></td>
+                                <td>24 aug 2016 15:09</td>
+                                <td>221563251</td>
+                                <td>1.2.840.113845.11.1000000001785866041.20160610141523.3920428</td>
+                                <td>Kamer 1</td>
+                                <td>1564215351</td>
+                            </tr>
+                            <tr id="row_@(i)" class="hidden">
+                                <td></td>
+                                <td colspan="10" style="padding: 0px" ; margin:0px>
+                                    <table class="table table-hover table-striped" style="margin:0px">
+                                        <thead>
+                                            <tr>
+                                                <th>Fotonummer</th>
+                                                <th>Detector</th>
+                                                <th>Analysedatum en tijd</th>
+                                                <th>Status</th>
+                                                <th>Resultaten</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+
+                                        @for (int j = 0; j < rand.Next(1, 10); j++)
+                                        {
+                                            <tr>
+                                                <td>@(j + 1)</td>
+                                                <td>Detector 4</td>
+                                                <td>24 aug 2016 15:32</td>
+                                                <td class="success">In orde</td>
+                                                <td>H-C-R</td>
+                                                <td style="width: 50px"><button class="btn btn-xs btn-success">Bekijken</button></td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </td>
+                            </tr>
+                        }*@
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+<!-- The original table to clone for each examination -->
+<table class="hidden">
+    <tr id="original_row">
+        <td></td>
+        <td colspan="10" style="padding: 0px" ; margin:0px>
+            <table class="table table-hover table-striped" style="margin:0px">
+                <thead>
+                    <tr>
+                        <th>InstanceUID</th>
+                        <th>Detector</th>
+                        <th>Analysedatum en tijd</th>
+                        <th>Status</th>
+                        <th>Resultaten</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+            </table>
+        </td>
+    </tr>
+</table>
+<!-- End original table -->

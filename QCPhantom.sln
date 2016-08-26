@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QCPhantom", "QCPhantom\QCPhantom.csproj", "{CEE973D5-3804-40BF-89DC-F3E48DA3FFFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PIX-13", "PIX-13\PIX-13.csproj", "{7926DA58-9704-4FB0-AE4C-66201D09B45B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QCAnalyser", "QCAnalyser\QCAnalyser.csproj", "{7FABD71B-C1A3-4C4B-B8E0-9894A025CFDF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CEE973D5-3804-40BF-89DC-F3E48DA3FFFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEE973D5-3804-40BF-89DC-F3E48DA3FFFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEE973D5-3804-40BF-89DC-F3E48DA3FFFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEE973D5-3804-40BF-89DC-F3E48DA3FFFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7926DA58-9704-4FB0-AE4C-66201D09B45B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7926DA58-9704-4FB0-AE4C-66201D09B45B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7926DA58-9704-4FB0-AE4C-66201D09B45B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7926DA58-9704-4FB0-AE4C-66201D09B45B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FABD71B-C1A3-4C4B-B8E0-9894A025CFDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FABD71B-C1A3-4C4B-B8E0-9894A025CFDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FABD71B-C1A3-4C4B-B8E0-9894A025CFDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FABD71B-C1A3-4C4B-B8E0-9894A025CFDF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
