@@ -19,6 +19,13 @@ namespace QCAnalyser.Data.Query
 
         #region "Constructors"
 
+        /// <summary>
+        /// Creates a new instance of a query rule
+        /// </summary>
+        /// <param name="field">The field of the table to check</param>
+        /// <param name="table">The table of the field</param>
+        /// <param name="identifier">An identifier to apply during the check</param>
+        /// <param name="condition">The condition to which the field must identify</param>
         public QueryRule(string field, string table, Identifier identifier, object condition)
         {
             this.field = field;
@@ -31,21 +38,33 @@ namespace QCAnalyser.Data.Query
 
         #region "Properties"
 
+        /// <summary>
+        /// Gets the field of the query rule
+        /// </summary>
         public string Field
         {
             get { return field; }
         }
 
+        /// <summary>
+        /// Gets the table of the query rule
+        /// </summary>
         public string Table
         {
             get { return table; }
         }
 
+        /// <summary>
+        /// Gets the identifier of the query rule
+        /// </summary>
         public Identifier Identifier
         {
             get { return identifier; }
         }
 
+        /// <summary>
+        /// Gets the condition fo the query rule
+        /// </summary>
         public object Condition
         {
             get { return condition; }
@@ -55,10 +74,7 @@ namespace QCAnalyser.Data.Query
 
         #region "Methods"
 
-        public override string ToString()
-        {
-            return table + "." + field + identifier + condition;
-        }
+
 
         #endregion
 
@@ -70,7 +86,10 @@ namespace QCAnalyser.Data.Query
 
         #region "Inherited Methods"
 
-
+        public override string ToString()
+        {
+            return table + "." + field + identifier + condition;
+        }
 
         #endregion
     }

@@ -19,6 +19,11 @@ namespace QCAnalyser.Data.Query
 
         #region "Constructors"
 
+        /// <summary>
+        /// Creates a new instance of a DataTable object
+        /// </summary>
+        /// <param name="reader">A DbDataReader object containing data from an executed query against a database</param>
+        /// <param name="source">The data source that provided the data in the DbDataReader</param>
         public DataTable(DbDataReader reader, DataSource source)
         {
             ReadDataReader(reader, source);
@@ -28,6 +33,9 @@ namespace QCAnalyser.Data.Query
 
         #region "Properties"
 
+        /// <summary>
+        /// Gets the fields in the DataTable
+        /// </summary>
         public string[] Fields
         {
             get { return fields.ToArray(); }
@@ -37,6 +45,11 @@ namespace QCAnalyser.Data.Query
 
         #region "Methods"
 
+        /// <summary>
+        /// Merges the data from current DataTable with an other DataTable object
+        /// </summary>
+        /// <param name="table">The DataTable object to merge the current DataTable with</param>
+        /// <returns>A DataTable object with the added data from the other DataTable</returns>
         public DataTable Merge(DataTable table)
         {
             // Check if the tables to merge are not the same
@@ -106,6 +119,10 @@ namespace QCAnalyser.Data.Query
 
         #region "Inherited Methods"
 
+        /// <summary>
+        /// Gets an enumerator to loop through an foreach loop
+        /// </summary>
+        /// <returns>An IEnumerator object containing data for the foreach loop</returns>
         public IEnumerator GetEnumerator()
         {
             for(int i = 0; i<data.Count; i++)

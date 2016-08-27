@@ -43,6 +43,11 @@ namespace QCAnalyser.Data
 
         #region "Methods"
 
+        /// <summary>
+        /// Executes a query against the current data source. The results are returned as a DataTable object
+        /// </summary>
+        /// <param name="query">A DataQuery object containing the information about the query that needs to be executed</param>
+        /// <returns>DataTable object containing the matching results of the query from this data source</returns>
         public abstract DataTable ExecuteQuery(DataQuery query);
         
         #endregion

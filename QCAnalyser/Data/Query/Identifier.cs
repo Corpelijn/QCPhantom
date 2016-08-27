@@ -18,16 +18,41 @@ namespace QCAnalyser.Data.Query
         public static readonly Identifier ENDS_WITH = new Identifier("like %_");
         public static readonly Identifier CONTAINS = new Identifier("like %_%");
 
+        #region "Attributes"
+
         private string identifier;
 
+        #endregion
+
+        #region "Constructors"
+
+        /// <summary>
+        /// Creates a new instance of the Identifier class. Only for internal use
+        /// </summary>
+        /// <param name="identifier"></param>
         private Identifier(string identifier)
         {
             this.identifier = identifier;
         }
 
+        #endregion
+
+        #region "Properties"
+        #endregion
+
+        #region "Methods"
+        #endregion
+
+        #region "Static Methods"
+        #endregion
+
+        #region "Inherited Methods"
+
         public override string ToString()
         {
             return identifier;
         }
+
+        #endregion
     }
 }
