@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7FABD71B-C1A3-4C4B-B8E0-9894A025CFDF}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{172F9FAE-6F9A-4742-B845-EE6DA9887419}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QCAnalyser</RootNamespace>
-    <AssemblyName>QCAnalyser</AssemblyName>
+    <RootNamespace>TestApplication</RootNamespace>
+    <AssemblyName>TestApplication</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySql.Data">
-      <HintPath>..\..\CBSM\CBSM\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,24 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Database\DatabaseSource.cs" />
-    <Compile Include="Data\Database\MySqlDatabase.cs" />
-    <Compile Include="Data\DataManager.cs" />
-    <Compile Include="Data\DataSource.cs" />
-    <Compile Include="Data\Query\DataQuery.cs" />
-    <Compile Include="Data\Query\DataRow.cs" />
-    <Compile Include="Data\Query\DataTable.cs" />
-    <Compile Include="Data\Query\Identifier.cs" />
-    <Compile Include="Data\Query\QueryResult.cs" />
-    <Compile Include="Data\Query\QueryRule.cs" />
-    <Compile Include="Domain\Analyse.cs" />
-    <Compile Include="Domain\Detector.cs" />
-    <Compile Include="Domain\Examination.cs" />
-    <Compile Include="Domain\Machine.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DICOM\" />
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QCAnalyser\QCAnalyser.csproj">
+      <Project>{7fabd71b-c1a3-4c4b-b8e0-9894a025cfdf}</Project>
+      <Name>QCAnalyser</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
