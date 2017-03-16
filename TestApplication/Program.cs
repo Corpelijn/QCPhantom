@@ -1,7 +1,10 @@
 ﻿using QCAnalyser.Data;
 using QCAnalyser.Data.Query;
+using QCAnalyser.DICOM;
+using QCAnalyser.Domain;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,15 +22,19 @@ namespace TestApplication
                 .Where("test", "data", Identifier.NOT_EQUALS_TO, 0)
                 );
 
-            foreach(string field in table.Fields)
-            {
-                Console.Write(field + "\t");
-            }
-            Console.WriteLine();
-            foreach (DataRow row in table)
-            {
-                Console.WriteLine(row.GetData(0) + "\t\t" + row.GetData(1) + "\t\t\t" + ((DataSource)row.GetData(2)).Name);
-            }
+            //foreach(string field in table.Fields)
+            //{
+            //    Console.Write(field + "\t");
+            //}
+            //Console.WriteLine();
+            //foreach (DataRow row in table)
+            //{
+            //    Console.WriteLine(row.GetData(0) + "\t\t" + row.GetData(1) + "\t\t\t" + ((DataSource)row.GetData(2)).Name);
+            //}
+
+            //Machine[] machines = Machine.ReadAll();
+
+            //new DICOMImage().ReadDICOMFile();
 
             Console.ReadKey();
         }

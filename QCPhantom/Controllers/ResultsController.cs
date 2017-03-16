@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using QCAnalyser.Data.Query;
 using QCAnalyser.Domain;
 using System;
 using System.Web.Mvc;
@@ -13,40 +14,109 @@ namespace QCPhantom.Controllers
         }
 
         [HttpPost]
-        public ActionResult NextExamination(int index)
+        public ActionResult NextStudy(int index)
         {
-            Examination ex1 = new Examination()
-            {
-                AssessionNumber = "100254123",
-                ExaminationDateTime = DateTime.Now,
-                PatientId = "9154531254",
-                StudyInstanceUID = "1.2.840.113845.11.1000000001785866041.20160610141523.3920428"
-            };
-
             Random rand = new Random();
 
             JObject json = new JObject();
-            json.Add("assessionnumber", ex1.AssessionNumber + index);
-            json.Add("datetime", ex1.ExaminationDateTime.ToString("dd MMM yyyy HH:mm"));
-            json.Add("studyinstance", ex1.StudyInstanceUID);
-            json.Add("machine", "machine");
-            json.Add("patientid", ex1.PatientId);
 
-            int count = rand.Next(1, 10);
-            json.Add("analysecount", count);
+            int studycount = index == 0 ? 10 : 5;
 
-            for (int i = 0; i < count; i++)
+            json.Add("studycount", studycount);
+            for (int j = 0; j < studycount; j++)
             {
-                json.Add("instanceUID" + i, i + 1);
-                json.Add("detector" + i, "detector");
-                json.Add("datetime" + i, DateTime.Now.ToString("dd MMM yyyy HH:mm"));
-                json.Add("status" + i, "In orde");
-                json.Add("resultaten" + i, "H-C-R");
+                Study study = new Study()
+                {
+                    AssessionNumber = (100254123 + j + index + (studycount == 5 ? -1 : 0)).ToString(),
+                    ExaminationDateTime = DateTime.Now,
+                    PatientId = "9154531254",
+                    StudyInstanceUID = "1.2.840.113845.11.1000000001785866041.20160610141523.3920428"
+                };
+
+                JObject studyInfo = new JObject();
+                studyInfo.Add("assessionnumber", study.AssessionNumber);
+                studyInfo.Add("datetime", study.ExaminationDateTime.ToString("dd MMM yyyy HH:mm"));
+                studyInfo.Add("studyinstance", study.StudyInstanceUID);
+                studyInfo.Add("machine", "machine");
+                studyInfo.Add("patientid", study.PatientId);
+
+                int count = rand.Next(1, 10);
+                studyInfo.Add("imagecount", count);
+
+                for (int i = 0; i < count; i++)
+                {
+                    JObject imageInfo = new JObject();
+                    imageInfo.Add("instanceUID", i + 1);
+                    imageInfo.Add("detector", "detector");
+                    imageInfo.Add("datetime", DateTime.Now.ToString("dd MMM yyyy HH:mm"));
+                    imageInfo.Add("status", "In orde");
+                    imageInfo.Add("resultaten", "H-C-R");
+                    studyInfo.Add(new JProperty("image" + i, imageInfo));
+                }
+
+                json.Add(new JProperty("study" + j, studyInfo));
             }
+
+            if(studycount == 5)
+                json.Add("nomorestudies", true);
+
+            //System.IO.File.WriteAllText("D:\\temp.json", json.ToString());
 
             return Content(json.ToString(), "application/json");
 
             //return Json(new { datetime = ex1.ExaminationDateTime.ToString("dd MMM yyyy HH:mm"), assessionnumber = ex1.AssessionNumber, studyinstance = ex1.StudyInstanceUID, machine = "machine", patientid = ex1.PatientId, analysecount = rand.Next(1, 5) });
+        }
+
+        [HttpPost]
+        public ActionResult GetStudies(string filter)
+        {
+            DataQuery.FromBase64String(filter);
+
+            Random rand = new Random();
+
+            JObject json = new JObject();
+
+            int studycount = 100;
+
+            json.Add("studycount", studycount);
+            for (int j = 0; j < studycount; j++)
+            {
+                Study study = new Study()
+                {
+                    AssessionNumber = (100254123 + j).ToString(),
+                    ExaminationDateTime = DateTime.Now,
+                    PatientId = "9154531254",
+                    StudyInstanceUID = "1.2.840.113845.11.1000000001785866041.20160610141523.3920428"
+                };
+
+                JObject studyInfo = new JObject();
+                studyInfo.Add("assessionnumber", study.AssessionNumber);
+                studyInfo.Add("datetime", study.ExaminationDateTime.ToString("dd MMM yyyy HH:mm"));
+                studyInfo.Add("studyinstance", study.StudyInstanceUID);
+                studyInfo.Add("machine", "machine");
+                studyInfo.Add("patientid", study.PatientId);
+
+                int count = rand.Next(1, 10);
+                studyInfo.Add("imagecount", count);
+
+                for (int i = 0; i < count; i++)
+                {
+                    JObject imageInfo = new JObject();
+                    imageInfo.Add("instanceUID", i + 1);
+                    imageInfo.Add("detector", "detector");
+                    imageInfo.Add("datetime", DateTime.Now.ToString("dd MMM yyyy HH:mm"));
+                    imageInfo.Add("status", "In orde");
+                    imageInfo.Add("resultaten", "H-C-R");
+                    studyInfo.Add(new JProperty("image" + i, imageInfo));
+                }
+
+                json.Add(new JProperty("study" + j, studyInfo));
+            }
+
+            //if (studycount == 5)
+            //    json.Add("nomorestudies", true);
+
+            return Content(json.ToString(), "application/json");
         }
 
         [HttpPost]

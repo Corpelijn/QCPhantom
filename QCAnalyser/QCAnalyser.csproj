@@ -33,6 +33,9 @@
     <Reference Include="MySql.Data">
       <HintPath>..\..\CBSM\CBSM\MySql.Data.dll</HintPath>
     </Reference>
+    <Reference Include="opendicom-sharp">
+      <HintPath>..\..\..\..\Users\Bas\Downloads\opendicom-sharp_0.1.1-2\opendicom-sharp\bin\opendicom-sharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -50,18 +53,19 @@
     <Compile Include="Data\Query\DataQuery.cs" />
     <Compile Include="Data\Query\DataRow.cs" />
     <Compile Include="Data\Query\DataTable.cs" />
+    <Compile Include="Data\Query\EIdentifier.cs" />
     <Compile Include="Data\Query\Identifier.cs" />
+    <Compile Include="Data\Query\QueryField.cs" />
     <Compile Include="Data\Query\QueryResult.cs" />
     <Compile Include="Data\Query\QueryRule.cs" />
+    <Compile Include="DICOM\DICOMImage.cs" />
     <Compile Include="Domain\Analyse.cs" />
     <Compile Include="Domain\Detector.cs" />
     <Compile Include="Domain\Examination.cs" />
     <Compile Include="Domain\Machine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DICOM\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

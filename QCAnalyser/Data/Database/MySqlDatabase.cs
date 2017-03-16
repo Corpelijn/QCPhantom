@@ -68,7 +68,8 @@ namespace QCAnalyser.Data.Database
                 using (MySqlCommand command = connection.CreateCommand())
                 {
                     // Create a command to execute from the given DataQuery object
-                    command.CommandText = "select " + string.Join(",", query.Fields) + " from " + string.Join(",", query.Tables) + " where " + string.Join(" AND ", (object[])query.Rules);
+                    command.CommandText = BuildQuery(query);
+                    //command.CommandText = "select " + string.Join(",", query.Fields) + " from " + string.Join(",", query.Tables) + (query.Rules.Length > 0 ? " where " + string.Join(" AND ", (object[])query.Rules) : "");
                     // Execute the query against the database. Tell the database to return table information as well
                     DbDataReader reader = command.ExecuteReader(System.Data.CommandBehavior.KeyInfo);
                     // Create a new instance of a DataTable object and store the results of the query into it
@@ -78,6 +79,44 @@ namespace QCAnalyser.Data.Database
 
             // Return the DataTable object
             return table;
+        }
+
+        /// <summary>
+        /// Converts the DataQuery object into a valid MySql query
+        /// </summary>
+        /// <param name="query">The DataQuery object</param>
+        /// <returns>A strnng containing a valid MySql query</returns>
+        private string BuildQuery(DataQuery query)
+        {
+            StringBuilder sqlQuery = new StringBuilder();
+
+            // Build the selectors of the query
+            sqlQuery.Append("select ").Append(string.Join(",", (object[])query.Fields));
+
+            // Add the tables to the query
+            sqlQuery.Append(" from ").Append(string.Join(",", query.Tables));
+
+            // Add the where clauses to the query
+            sqlQuery.Append(" where ");
+
+            foreach(QueryRule rule in query.Rules)
+            {
+                sqlQuery.Append(rule.Field);
+                switch((EIdentifier)rule.Identifier)
+                {
+                    case EIdentifier.EQUALS_TO:
+                        sqlQuery.Append(" == ");
+                        break;
+                    case EIdentifier.NOT_EQUALS_TO:
+                        sqlQuery.Append(" != ");
+                        break;
+                }
+                sqlQuery.Append(rule.Condition).Append(" AND ");
+            }
+
+            sqlQuery = sqlQuery.Remove(sqlQuery.Length - 5, 5);
+
+            return sqlQuery.ToString();
         }
 
         #endregion
