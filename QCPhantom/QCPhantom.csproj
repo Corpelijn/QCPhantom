@@ -566,6 +566,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\loading.gif" />
     <Content Include="Images\minus.png" />
     <Content Include="Images\plus.png" />
     <Content Include="Scripts\bootstrap.js" />

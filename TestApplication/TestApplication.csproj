@@ -50,6 +50,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\QCAnalyser.Data.MySql\QCAnalyser.Data.MySql.csproj">
+      <Project>{fec252d2-c49a-4ea2-9bff-75047cf2bbd6}</Project>
+      <Name>QCAnalyser.Data.MySql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\QCAnalyser\QCAnalyser.csproj">
       <Project>{7fabd71b-c1a3-4c4b-b8e0-9894a025cfdf}</Project>
       <Name>QCAnalyser</Name>

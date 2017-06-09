@@ -1,5 +1,6 @@
 ﻿using QCAnalyser.Data;
 using QCAnalyser.Data.Query;
+using QCAnalyser.Data.Sources;
 using QCAnalyser.DICOM;
 using QCAnalyser.Domain;
 using System;
@@ -15,26 +16,37 @@ namespace TestApplication
     {
         static void Main(string[] args)
         {
-            DataManager.AddDatabaseSource("TestDB", "localhost", "qcphantom", "root", "");
-            DataTable table = DataManager.QueryResults(new DataQuery()
-                .Select("test", "id")
-                .Select("test", "data")
-                .Where("test", "data", Identifier.NOT_EQUALS_TO, 0)
-                );
+            DataManager.AddDataSource(MySqlDatabaseSource.Create("TestDB", "localhost", "qcphantom", "root", ""));
+            DataSource source = DataManager.PrimarySource;
+            source.Open();
 
-            //foreach(string field in table.Fields)
-            //{
-            //    Console.Write(field + "\t");
-            //}
-            //Console.WriteLine();
-            //foreach (DataRow row in table)
-            //{
-            //    Console.WriteLine(row.GetData(0) + "\t\t" + row.GetData(1) + "\t\t\t" + ((DataSource)row.GetData(2)).Name);
-            //}
+            //Machine.ReadAll();
 
-            //Machine[] machines = Machine.ReadAll();
+            Console.WriteLine("===== DataQuery =====");
+            ResultTable table = source.ExecuteQuery(new DataQuery()
+                .Join("study", "id", "image", "study_id")
+                .Where("study", "id", QueryIdentifier.Equals, 2));
 
-            //new DICOMImage().ReadDICOMFile();
+            foreach (ResultRow row in table)
+            {
+                for (int i = 0; i < row.ColumnCount; i++)
+                {
+                    Console.Write(row.GetData(row.GetColumn(i)) + "\t");
+                }
+                Console.WriteLine();
+            }
+
+            Console.WriteLine("\n\n===== SelectInstruction =====");
+            table = source.ExecuteQuery("select * from study where study.id=?", 2);
+
+            foreach (ResultRow row in table)
+            {
+                for (int i = 0; i < row.ColumnCount; i++)
+                {
+                    Console.Write(row.GetData(row.GetColumn(i)) + "\t");
+                }
+                Console.WriteLine();
+            }
 
             Console.ReadKey();
         }

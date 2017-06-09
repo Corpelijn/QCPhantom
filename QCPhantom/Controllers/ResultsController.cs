@@ -70,7 +70,7 @@ namespace QCPhantom.Controllers
         [HttpPost]
         public ActionResult GetStudies(string filter)
         {
-            DataQuery.FromBase64String(filter);
+            //DataQuery.FromBase64String(filter);
 
             Random rand = new Random();
 

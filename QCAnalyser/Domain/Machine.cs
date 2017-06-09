@@ -38,14 +38,13 @@ namespace QCAnalyser.Domain
 
         public static Machine[] ReadAll()
         {
-            DataTable queryResult = DataManager.QueryResults(new DataQuery()
-                .Select("machine", "id")
-                .Select("machine", "name")
+            ResultTable queryResult = DataManager.PrimarySource.ExecuteQuery(new DataQuery()
+                .From("Machine")
                 );
 
             List<Machine> machines = new List<Machine>();
 
-            foreach (DataRow row in queryResult)
+            foreach (ResultRow row in queryResult)
             {
                 Machine m = new Machine(Convert.ToInt32(row.GetData("id")), row.GetData("name").ToString());
                 machines.Add(m);

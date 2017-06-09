@@ -46,18 +46,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Database\DatabaseSource.cs" />
-    <Compile Include="Data\Database\MySqlDatabase.cs" />
     <Compile Include="Data\DataManager.cs" />
-    <Compile Include="Data\DataSource.cs" />
+    <Compile Include="Data\Query\Database\DatabaseParameter.cs" />
+    <Compile Include="Data\Query\Database\DatabaseQuery.cs" />
     <Compile Include="Data\Query\DataQuery.cs" />
-    <Compile Include="Data\Query\DataRow.cs" />
-    <Compile Include="Data\Query\DataTable.cs" />
-    <Compile Include="Data\Query\EIdentifier.cs" />
-    <Compile Include="Data\Query\Identifier.cs" />
-    <Compile Include="Data\Query\QueryField.cs" />
-    <Compile Include="Data\Query\QueryResult.cs" />
-    <Compile Include="Data\Query\QueryRule.cs" />
+    <Compile Include="Data\Query\JoinData.cs" />
+    <Compile Include="Data\Query\QueryIdentifier.cs" />
+    <Compile Include="Data\Query\ResultRow.cs" />
+    <Compile Include="Data\Query\ResultTable.cs" />
+    <Compile Include="Data\Query\WhereData.cs" />
+    <Compile Include="Data\Sources\DatabaseSource.cs" />
+    <Compile Include="Data\Sources\DataSource.cs" />
     <Compile Include="DICOM\DICOMImage.cs" />
     <Compile Include="Domain\Analyse.cs" />
     <Compile Include="Domain\Detector.cs" />

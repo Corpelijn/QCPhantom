@@ -7,256 +7,40 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h2>Overview</h2>
+        <h2>Resultaten overzicht</h2>
         <hr />
     </div>
 </div>
 
 <script>
-    var index = 0;
-    var receivedStudies = [];
-    var currentAssessions = [];
+    function LoadResults(filter, amount) {
+        $('#loading_animation').removeClass('hidden');
+        $('#btn_loadmore').addClass('disabled');
 
-    // This script sets the events on the rows
-    function InitStudyEvents() {
-        $('[id^=img_row_]').off();
-        $('[id^=img_row_]').click(function () {
-            ExpandCloseData($(this).attr('id'));
-        });
+        $.ajax({
+            url: './Results/GetStudies?filter=' + filter,
+            type: 'POST',
+            success: function (data) {
+                $('#loading_animation').addClass('hidden');
+                $('#btn_loadmore').removeClass('disabled');
+            },
+            error: function () {
+                $('#table_examinations').append($('#original_row').clone().attr('id', 'row_' + 1).addClass('hidden'));
+                //$('#original_loading_error').clone().attr('id', 'loading_error');
+                //$('#loading_error').insertAfter($('#button_loadmore'));
 
-        $('[id^=td_row_]').off();
-        $('[id^=td_row_]').click(function () {
-            ExpandCloseData($(this).attr('id'));
-        });
-    }
-
-    // This script collapses and expands the studies
-    var img_is_done;
-    function ExpandCloseData(parent) {
-        // Get the row number from the id
-        var index = parent.lastIndexOf('_');
-        var row = parent.substring(index + 1);
-
-        if (parent.indexOf('td_row_') != -1) {
-            if (img_is_done == row) {
-                img_is_done = undefined;
-                return;
+                $('#loading_animation').addClass('hidden');
+                $('#btn_loadmore').removeClass('disabled');
             }
-        }
-
-        var rowDOM = $('#row_' + row);
-        if (rowDOM.hasClass('hidden')) {
-            rowDOM.removeClass('hidden');
-            $('#img_row_' + row).attr('src', './Images/minus.png');
-        } else {
-            rowDOM.addClass('hidden');
-            $('#img_row_' + row).attr('src', './Images/plus.png');
-        }
-
-        if (parent.indexOf('img_row_') != -1) {
-            img_is_done = row;
-        }
-    }
-
-    // This script gets studies from the server
-    function GetStudies(filter) {
-        $.post("./Results/GetStudies?filter=" + filter, function (data) {
-            index = 0;
-            var studies = $.parseJSON(JSON.stringify(data));
-
-            var studyCount = studies.studycount;
-            for (var i = 0; i < studyCount; i++) {
-                var study = studies['study' + i];
-                receivedStudies.push(study);
-            }
-
-            AddStudies(20);
         });
     }
 
-    // This script adds new rows to the table of studies
-    function AddStudies(amount) {
-        for (var i = 0; i < amount; i++) {
-            console.log(index);
-            AddStudy(receivedStudies[index]);
-            index++;
-            if (index == receivedStudies.length) {
-                $('#btn_loadmore').addClass('disabled');
-                $('#btn_loadmore').text('Er zijn geen resultaten meer');
-                receivedStudies = [];
-                break;
-            }
-        }
-    }
-
-    //This script adds the actual row to the table
-    function AddStudy(json) {
-        if ($.inArray(json.assessionnumber, currentAssessions) >= 0) {
-            return;
-        }
-        else {
-            currentAssessions.push(json.assessionnumber);
-        }
-
-        var index = json.assessionnumber;
-
-        var newRow = '<tr><td style="padding-top: 7px; text-align: center" id="td_row_' + index + '"><img src="./Images/plus.png" id="img_row_' + index + '" /></td>';
-        newRow += '<td>' + json.datetime + '</td>' + '<td>' + json.assessionnumber + '</td>' + '<td>' + json.studyinstance + '</td>';
-        newRow += '<td>' + json.machine + '</td>' + '<td>' + json.patientid + '</td>' + '</tr>';
-
-        $('#table_examinations').append(newRow);
-        $('#table_examinations').append($('#original_row').clone().attr('id', 'row_' + index).addClass('hidden'));
-
-        InitStudyEvents();
-
-        for (i = 0; i < json.imagecount; i++) {
-            var image = json['image' + i];
-            AddAnalyse(index, image.instanceUID, image.detector, image.datetime, image.status, image.resultaten);
-        }
-    }
-
-    // This script adds new analyses to the table of analyses for each study
-    function AddAnalyse(rowindex, instanceUID, detector, datetime, status, resultaten) {
-        var newRow = '<tr><td>' + instanceUID + '</td>';
-        newRow += '<td>' + detector + '</td><td>' + datetime + '</td>';
-        newRow += '<td class="success">' + status + '</td><td>' + resultaten + '</td>';
-        newRow += '<td style="width: 50px"><a href="#" class="btn btn-xs btn-success">Bekijken</button></td></tr>';
-
-        $('#row_' + rowindex + ' tbody').append(newRow);
-    }
-
-    // This script makes sure the filter buttons and controls work
-    function FilterFunctions() {
-        $('#show_adv_filters').click(function () {
-            $('#adv_filters').removeClass('hidden');
-            $('#nrm_filters').addClass('hidden');
-        });
-
-        var filterindex = 0;
-        $('#btn_addfilter').click(function () {
-            var filter = $('#original_filter').clone();
-            filter.attr('id', 'filter' + filterindex);
-            filter.find('#btn_deletefilter').attr('id', 'btn_deletefilter' + filterindex);
-            filterindex += 1;
-            filter.insertBefore('#btn_addfilter');
-
-            InitFilterEvents();
-        });
-
-        $('#btn_canceladvfilters').click(function () {
-            $('#adv_filters').addClass('hidden');
-            $('#nrm_filters').removeClass('hidden');
-        });
-    }
-
-    function InitFilterEvents() {
-        $('[id^=btn_deletefilter]').off();
-        $('[id^=btn_deletefilter]').click(function () {
-            console.log('button click');
-        });
-    }
-
-    // Make sure the document loads any data
     $(document).ready(function () {
-        InitStudyEvents();
-
-        GetStudies("");
-
         $('#btn_loadmore').click(function () {
-            AddStudies(20);
+            LoadResults('', 10);
         });
-
-        FilterFunctions();
     });
 </script>
-
-<div class="row">
-    <div class="col-md-12">
-        <h3>Resultaten filteren</h3>
-        <div class="row" id="nrm_filters">
-            <div class="col-md-3">
-                <input type="text" class="form-control" placeholder="Filtertekst" />
-            </div>
-            <a href="/Results" class="btn btn-success">Filter toepassen</a>
-            <div class="col-md-3 pull-right">
-                <div class="btn btn-primary pull-right" id="show_adv_filters">Geavanceerde filters</div>
-            </div>
-        </div>
-        <div class="row hidden" id="adv_filters">
-            <div class="col-md-6" id="filter_container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="filter0">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="col-md-3" style="padding-left: 0px">
-                                        <select class="form-control">
-                                            <option>Datum en tijd</option>
-                                            <option>PACS assession</option>
-                                            <option>Study instace UID</option>
-                                            <option>Machine</option>
-                                            <option>Patient ID</option>
-                                            <option>InstanceUID</option>
-                                            <option>Detector</option>
-                                            <option>Analysedatum en tijd</option>
-                                            <option>Status</option>
-                                            <option>Resultaten</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3" style="padding-left:0px">
-                                        <select class="form-control">
-                                            <option>Equal to</option>
-                                            <option>Not equal to</option>
-                                            <option>Contains</option>
-                                            <option>Not contains</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-6" style="padding-right: 0px; padding-left: 0px">
-                                        <div class="col-md-10" style="padding-right: 0px; padding-left: 0px">
-                                            <input type="text" class="form-control" placeholder="Condition" />
-                                        </div>
-                                        <div class="col-md-2" style="padding-right: 0px">
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row" style="padding-top: 10px">
-                            </div>
-                        </div>
-
-                        <div class="btn btn-success btn-xs btn-block" id="btn_addfilter"><span class="fa fa-plus fa-fw"></span>Filter toevoegen</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-md-3">
-                        Condition filter type:
-                        @*
-                            TODO: Make the conditionfilter look okay.
-                            TODO: Make all condition be deleteable by keeping a list of all the active filters
-                            TODO: Be able to delete a filter
-                        *@
-                    </div>
-                    <div class="col-md-2">
-                        <select class="form-control">
-                            <option>OR</option>
-                            <option>AND</option>
-                        </select>
-                    </div>
-                </div>
-                <br />
-                <div class="btn btn-success" id="btn_submitadvfilters">Filters toepassen</div>
-                <div class="btn btn-primary" id="btn_canceladvfilters">Annuleren</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<br />
-<br />
 
 <div class="row">
     <div class="col-md-12">
@@ -279,7 +63,15 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="btn btn-success btn-lg btn-block" id="btn_loadmore">Meer resultaten laden</div>
+        <center class="hidden" id="loading_animation">
+            <img src="~/Images/loading.gif" height="60px" />
+            <br />
+            <br />
+        </center>
+
+        <div class="btn btn-success btn-lg btn-block" id="btn_loadmore">
+            <img src="~/Images/spinner.gif" height="23px" id="loading_animation" class="hidden" /> Meer resultaten laden
+        </div>
     </div>
 </div>
 <div class="row">
@@ -314,46 +106,15 @@
     </tr>
 </table>
 <!-- End original table -->
-<!-- The original filter to clone for each extra filter added by the user -->
-<div class="hidden">
-    <div id="original_filter">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="col-md-3" style="padding-left: 0px">
-                    <select class="form-control">
-                        <option>Datum en tijd</option>
-                        <option>PACS assession</option>
-                        <option>Study instace UID</option>
-                        <option>Machine</option>
-                        <option>Patient ID</option>
-                        <option>InstanceUID</option>
-                        <option>Detector</option>
-                        <option>Analysedatum en tijd</option>
-                        <option>Status</option>
-                        <option>Resultaten</option>
-                    </select>
-                </div>
-                <div class="col-md-3" style="padding-left:0px">
-                    <select class="form-control">
-                        <option>Equal to</option>
-                        <option>Not equal to</option>
-                        <option>Contains</option>
-                        <option>Not contains</option>
-                    </select>
-                </div>
+<!-- The original loading error -->
 
-                <div class="col-md-6" style="padding-right: 0px; padding-left: 0px">
-                    <div class="col-md-10" style="padding-right: 0px; padding-left: 0px">
-                        <input type="text" class="form-control" placeholder="Condition" />
-                    </div>
-                    <div class="col-md-2" style="padding-right: 0px">
-                        <div class="btn btn-danger" id="btn_deletefilter"><span class="fa fa-times fa-fw"></span></div>
-                    </div>
-                </div>
-            </div>
+<div class="hidden">
+    <center id="original_loading_error">
+        <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            Er is iets misgegaan tijdens het ophalen van nieuwe resultaten. Controleer uw internetverbinding.
         </div>
-        <div class="row" style="padding-top: 10px">
-        </div>
-    </div>
+    </center>
 </div>
-<!-- End original filter -->
+
+<!-- End original loading error-->
